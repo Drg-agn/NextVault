@@ -1,0 +1,17 @@
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#03050f;
+  --glass:rgba(255,255,255,0.04);
+  --glass-border:rgba(255,255,255,0.08);
+  --accent:#00f5c4;
+  --accent2:#7b6ef6;
+  --text:#e8eaf0;
+  --muted:rgba(232,234,240,0.45);
+}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
