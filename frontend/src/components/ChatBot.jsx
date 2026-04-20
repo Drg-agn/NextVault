@@ -34,7 +34,7 @@ export default function ChatBot() {
                 .map(m => ({ role: m.role, content: m.content }));
 
             const { data } = await axios.post(
-                "http://localhost:3000/api/chat",
+                '${process.env.NEXT_PUBLIC_API_URL}/api/chat',
                 { messages: apiMessages, accountId },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

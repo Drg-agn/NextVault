@@ -25,13 +25,13 @@ export default function Transaction() {
   const fetchData = async () => {
     try {
       const headers = { Authorization: `Bearer ${token}` }
-      const accRes = await axios.get('http://localhost:3000/api/accounts', { headers, withCredentials: true })
+      const accRes = await axios.get('${process.env.NEXT_PUBLIC_API_URL}/api/accounts', { headers, withCredentials: true })
       const acc = accRes.data.accounts?.[0]
       setAccount(acc)
       if (acc) {
-        const balRes = await axios.get(`http://localhost:3000/api/accounts/${acc._id}/balance`, { headers, withCredentials: true })
+        const balRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/accounts/${acc._id}/balance`, { headers, withCredentials: true })
         setBalance(balRes.data.balance || 0)
-        const txRes = await axios.get(`http://localhost:3000/api/transactions/${acc._id}`, { headers, withCredentials: true })
+        const txRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${acc._id}`, { headers, withCredentials: true })
         setTransactions(txRes.data.transactions || [])
       }
     } catch (err) {
@@ -99,7 +99,7 @@ export default function Transaction() {
     setStatus(null)
     try {
       const res = await axios.post(
-        'http://localhost:3000/api/transactions',
+        '${process.env.NEXT_PUBLIC_API_URL}/api/transactions',
         {
           fromAccountId: account._id,
           toAccountId: form.toAccountId,

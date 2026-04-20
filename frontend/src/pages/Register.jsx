@@ -80,7 +80,7 @@ export default function Register() {
     setError('')
     try {
       const res = await axios.post(
-        'http://localhost:3000/api/auth/register',
+        '${process.env.NEXT_PUBLIC_API_URL}/api/auth/register',
         form,
         { withCredentials: true }
       )

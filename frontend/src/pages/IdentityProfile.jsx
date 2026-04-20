@@ -21,11 +21,11 @@ export default function Profile() {
   const fetchData = async () => {
     try {
       const headers = { Authorization: `Bearer ${token}` }
-      const accRes = await axios.get('http://localhost:3000/api/accounts', { headers, withCredentials: true })
+      const accRes = await axios.get('${process.env.NEXT_PUBLIC_API_URL}/api/accounts', { headers, withCredentials: true })
       const acc = accRes.data.accounts?.[0]
       setAccount(acc)
       if (acc) {
-        const balRes = await axios.get(`http://localhost:3000/api/accounts/${acc._id}/balance`, { headers, withCredentials: true })
+        const balRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/accounts/${acc._id}/balance`, { headers, withCredentials: true })
         setBalance(balRes.data.balance || 0)
       }
     } catch (err) {
@@ -35,7 +35,7 @@ export default function Profile() {
 
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:3000/api/auth/logout', {}, {
+      await axios.post('${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout', {}, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       })
