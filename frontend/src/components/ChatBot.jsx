@@ -10,8 +10,9 @@ export default function ChatBot() {
     const [loading, setLoading] = useState(false);
     const messagesEndRef = useRef(null);
 
-    const accountId = localStorage.getItem("accountId");
-    const token = localStorage.getItem("token");
+    // ✅ FIXED: .trim() removes invisible characters/newlines that cause "Invalid character in header"
+    const token = (localStorage.getItem("token") || "").trim();
+    const accountId = (localStorage.getItem("accountId") || "").trim();
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -32,9 +33,14 @@ export default function ChatBot() {
                 .map(m => ({ role: m.role, content: m.content }));
 
             const { data } = await axios.post(
-                `${import.meta.env.VITE_API_URL}/api/chat`,   // ✅ FIXED
+                `${import.meta.env.VITE_API_URL}/api/chat`,
                 { messages: apiMessages, accountId },
-                { headers: { Authorization: `Bearer ${token}` } }
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                }
             );
 
             setMessages(prev => [...prev, { role: "assistant", content: data.reply }]);
