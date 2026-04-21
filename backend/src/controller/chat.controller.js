@@ -11,7 +11,6 @@ async function chatController(req, res) {
             return res.status(400).json({ message: "messages array is required" });
         }
 
-        // Fetch user context (balance + recent transactions)
         let contextInfo = "";
         if (accountId) {
             const account = await accountModel.findOne({
@@ -53,11 +52,11 @@ ${contextInfo ? `Here is the current user's account info:\n${contextInfo}` : ""}
 
 Keep responses concise, friendly, and professional. Use ₹ for currency. Never ask for passwords or sensitive info.`;
 
-        // ✅ DeepSeek API call (same format as OpenAI)
+        // ✅ Groq API — completely free, fast, no billing needed
         const response = await axios.post(
-            "https://api.deepseek.com/chat/completions",
+            "https://api.groq.com/openai/v1/chat/completions",
             {
-                model: "deepseek-chat",
+                model: "llama-3.3-70b-versatile",
                 max_tokens: 1024,
                 messages: [
                     { role: "system", content: systemPrompt },
@@ -66,7 +65,7 @@ Keep responses concise, friendly, and professional. Use ₹ for currency. Never 
             },
             {
                 headers: {
-                    "Authorization": `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+                    "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
                     "Content-Type": "application/json"
                 }
             }
