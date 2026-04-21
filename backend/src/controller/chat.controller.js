@@ -20,7 +20,6 @@ async function chatController(req, res) {
             });
 
             if (account) {
-                // Compute balance from ledger
                 const ledgerEntries = await ledgerModel.find({ account: accountId });
                 const balance = ledgerEntries.reduce((acc, entry) => {
                     return entry.type === "CREDIT"
@@ -28,7 +27,6 @@ async function chatController(req, res) {
                         : acc - entry.amount;
                 }, 0);
 
-                // Get last 5 transactions
                 const recentTx = await transactionModel
                     .find({
                         $or: [{ fromAccount: accountId }, { toAccount: accountId }]
@@ -55,11 +53,11 @@ ${contextInfo ? `Here is the current user's account info:\n${contextInfo}` : ""}
 
 Keep responses concise, friendly, and professional. Use ₹ for currency. Never ask for passwords or sensitive info.`;
 
-        // ✅ Groq API call
+        // ✅ DeepSeek API call (same format as OpenAI)
         const response = await axios.post(
-            "https://api.groq.com/openai/v1/chat/completions",
+            "https://api.deepseek.com/chat/completions",
             {
-                model: "llama-3.3-70b-versatile",
+                model: "deepseek-chat",
                 max_tokens: 1024,
                 messages: [
                     { role: "system", content: systemPrompt },
@@ -68,7 +66,7 @@ Keep responses concise, friendly, and professional. Use ₹ for currency. Never 
             },
             {
                 headers: {
-                    "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
+                    "Authorization": `Bearer ${process.env.DEEPSEEK_API_KEY}`,
                     "Content-Type": "application/json"
                 }
             }

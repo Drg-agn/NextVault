@@ -2,15 +2,28 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const razorpayRoutes = require("./routes/razorpay.routes");
-// Add with your other route imports
 const chatRoutes = require("./routes/chat.routes");
 
 
 const app = express();
 
-// ✅ CORS — must be before all routes
+// ✅ FIXED: allow both localhost and your Vercel deployment
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://next-vault-aqxp-git-main-drg-agns-projects.vercel.app",
+  "https://next-vault-aqxp-f657zbmp4-drg-agns-projects.vercel.app",
+  "https://next-vault-aqxp.vercel.app"
+];
+
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error("Not allowed by CORS"));
+  },
   credentials: true
 }));
 
@@ -26,4 +39,5 @@ app.use("/api/accounts", accountRouter);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/razorpay", razorpayRoutes);
 app.use("/api/chat", chatRoutes);
+
 module.exports = app;
