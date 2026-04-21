@@ -27,13 +27,13 @@ export default function Dashboard() {
   const fetchData = async () => {
     try {
       const headers = { Authorization: `Bearer ${token}` }
-      const accRes = await axios.get('${process.env.NEXT_PUBLIC_API_URL}/api/accounts', { headers, withCredentials: true })
+      const accRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/accounts`, { headers, withCredentials: true })
       const acc = accRes.data.accounts?.[0]
       setAccount(acc)
       if (acc) {
-        const balRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/accounts/${acc._id}/balance`, { headers, withCredentials: true })
+        const balRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/accounts/${acc._id}/balance`, { headers, withCredentials: true })
         setBalance(balRes.data.balance || 0)
-        const txRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${acc._id}`, { headers, withCredentials: true })
+        const txRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/transactions/${acc._id}`, { headers, withCredentials: true })
         setTransactions(txRes.data.transactions || [])
       }
     } catch (err) {
@@ -45,7 +45,7 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      await axios.post('${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout', {}, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {}, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       })
@@ -60,8 +60,9 @@ export default function Dashboard() {
     try {
       const headers = { Authorization: `Bearer ${token}` }
 
+      // ✅ FIXED: was mixing backtick + single quote
       const orderRes = await axios.post(
-        '${process.env.NEXT_PUBLIC_API_URL}/api/razorpay/create-order',
+        `${import.meta.env.VITE_API_URL}/api/razorpay/create-order`,
         { amount: Number(addAmount), accountId: account._id },
         { headers, withCredentials: true }
       )
@@ -77,8 +78,9 @@ export default function Dashboard() {
         order_id: orderId,
         handler: async function (response) {
           try {
+            // ✅ FIXED: was missing closing backtick
             await axios.post(
-              '${process.env.NEXT_PUBLIC_API_URL}/api/razorpay/verify-payment',
+              `${import.meta.env.VITE_API_URL}/api/razorpay/verify-payment`,
               {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,

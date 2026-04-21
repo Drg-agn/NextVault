@@ -80,7 +80,7 @@ export default function Register() {
     setError('')
     try {
       const res = await axios.post(
-        '${process.env.NEXT_PUBLIC_API_URL}/api/auth/register',
+     `${import.meta.env.VITE_API_URL}/api/auth/register`,
         form,
         { withCredentials: true }
       )

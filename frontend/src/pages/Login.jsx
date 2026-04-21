@@ -80,7 +80,7 @@ export default function Login() {
     setError('')
     try {
       const res = await axios.post(
-        '${process.env.NEXT_PUBLIC_API_URL}/api/auth/login',
+     `${import.meta.env.VITE_API_URL}/api/auth/login`,
         form,
         { withCredentials: true }
       )

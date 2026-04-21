@@ -10,7 +10,6 @@ export default function ChatBot() {
     const [loading, setLoading] = useState(false);
     const messagesEndRef = useRef(null);
 
-    // Get accountId from localStorage (adjust key to match your app)
     const accountId = localStorage.getItem("accountId");
     const token = localStorage.getItem("token");
 
@@ -28,13 +27,12 @@ export default function ChatBot() {
         setLoading(true);
 
         try {
-            // Only send role/content to backend (exclude initial assistant greeting)
             const apiMessages = updatedMessages
                 .filter(m => m.role === "user" || (m.role === "assistant" && m !== messages[0]))
                 .map(m => ({ role: m.role, content: m.content }));
 
             const { data } = await axios.post(
-                '${process.env.NEXT_PUBLIC_API_URL}/api/chat',
+                `${import.meta.env.VITE_API_URL}/api/chat`,   // ✅ FIXED
                 { messages: apiMessages, accountId },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -72,8 +70,8 @@ export default function ChatBot() {
                     display: "flex", alignItems: "center", justifyContent: "center",
                     transition: "transform 0.2s"
                 }}
-                onMouseEnter={e => e.target.style.transform = "scale(1.1)"}
-                onMouseLeave={e => e.target.style.transform = "scale(1)"}
+                onMouseEnter={e => e.currentTarget.style.transform = "scale(1.1)"}
+                onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
             >
                 {isOpen ? "✕" : "💬"}
             </button>
